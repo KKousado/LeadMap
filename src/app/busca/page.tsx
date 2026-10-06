@@ -59,6 +59,7 @@ export default function SearchPage() {
   } = useSearchStore()
 
   const [showFiltersDrawer, setShowFiltersDrawer] = useState(false)
+  const [apiWarning, setApiWarning] = useState<{ message: string; helpUrl?: string } | null>(null)
 
   const handleSearch = async (isNext = false) => {
     if (!query.trim()) {
@@ -67,6 +68,7 @@ export default function SearchPage() {
     }
 
     setSearching(true)
+    setApiWarning(null)
     if (!isNext) setLeads([])
 
     try {
@@ -83,12 +85,17 @@ export default function SearchPage() {
         }),
       })
 
-      if (!res.ok) {
-        const error = await res.json().catch(() => ({}))
-        throw new Error(error.message || 'Falha ao buscar no Google Places')
-      }
-
       const data = await res.json()
+
+      if (!res.ok) {
+        if (data.code === 'API_NOT_ENABLED') {
+          setApiWarning({
+            message: data.error,
+            helpUrl: data.helpUrl,
+          })
+        }
+        throw new Error(data.error || 'Falha ao buscar no Google Places')
+      }
 
       if (isNext) {
         appendLeads(data.leads || [])
@@ -124,6 +131,30 @@ export default function SearchPage() {
             retorno.
           </p>
         </div>
+
+        {/* API Activation Alert Banner */}
+        {apiWarning && (
+          <div className="p-4 rounded-[20px] bg-[#FF9500]/10 border border-[#FF9500]/30 text-xs text-[var(--foreground)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 font-bold text-[#FF9500]">
+                <span>⚠️ Places API (New) não ativada no Google Cloud</span>
+              </div>
+              <p className="text-[var(--muted-foreground)] leading-relaxed">
+                A chave de API está configurada, porém a <strong>Places API (New)</strong> precisa ser ativada no seu console da Google.
+              </p>
+            </div>
+            {apiWarning.helpUrl && (
+              <a
+                href={apiWarning.helpUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="shrink-0 px-4 py-2 rounded-xl bg-[#FF9500] hover:bg-[#FF9500]/90 text-white font-bold text-xs shadow-sm transition-all"
+              >
+                Ativar API no Google Cloud ↗
+              </a>
+            )}
+          </div>
+        )}
 
         {/* Search Input Box (iOS Glassmorphism) */}
         <div className="bg-[var(--card)] p-5 rounded-[24px] border border-[var(--border)] shadow-sm space-y-4">

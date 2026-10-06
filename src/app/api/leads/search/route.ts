@@ -38,18 +38,23 @@ export async function POST(req: NextRequest) {
         pageToken: next_page_token || undefined,
       })
     } catch (err: any) {
-      console.warn('Google Places API notice:', err.message)
-      // If Google Cloud project hasn't enabled Places API (New) yet, provide realistic mock results so the UI functions seamlessly
-      const { MOCK_LEADS } = await import('@/lib/mock-leads')
-      result = {
-        places: [],
-        nextPageToken: null,
-      }
-      leads = MOCK_LEADS.map((m) => ({
-        ...m,
-        name: m.name.replace(/Pizzaria|Dentista|Salão|Pet Shop|Academia/i, query.split(' ')[0]),
-        category: query.split(' ')[0] || m.category,
-      }))
+      console.error('Google Places API Error:', err.message)
+      
+      const isApiDisabled =
+        err.message?.includes('SERVICE_DISABLED') ||
+        err.message?.includes('Places API (New) has not been used') ||
+        err.message?.includes('PERMISSION_DENIED')
+
+      return NextResponse.json(
+        {
+          error: isApiDisabled
+            ? 'A "Places API (New)" não está ativada no seu console do Google Cloud para esta chave. Acesse https://console.developers.google.com/apis/api/places.googleapis.com/overview?project=720086728071 e clique em "Ativar".'
+            : `Erro ao consultar Google Places API: ${err.message}`,
+          code: isApiDisabled ? 'API_NOT_ENABLED' : 'API_ERROR',
+          helpUrl: 'https://console.developers.google.com/apis/api/places.googleapis.com/overview?project=720086728071',
+        },
+        { status: 502 }
+      )
     }
 
     if (result && result.places && result.places.length > 0) {

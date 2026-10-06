@@ -427,9 +427,9 @@ export async function searchPlaces(
  * Fetch a single place by its Place ID using the Places API (New).
  */
 export async function getPlaceDetails(placeId: string): Promise<RawPlace> {
-  const apiKey = process.env.GOOGLE_PLACES_API_KEY
+  const apiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.GOOGLE_MAPS_API_KEY
   if (!apiKey) {
-    throw new Error('GOOGLE_PLACES_API_KEY is not configured')
+    throw new Error('Google Places API key is not configured')
   }
 
   const url = `${PLACES_BASE_URL}/places/${encodeURIComponent(placeId)}`
