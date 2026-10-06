@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🗺️ LeadMap — Plataforma de Prospecção de Leads com Google Maps & IA
 
-## Getting Started
+Plataforma web moderna e completa para **descobrir, qualificar e contatar negócios locais** sem site próprio e com alta demanda reprimida, integrando **Google Places API (New)** e **Inteligência Artificial (Claude)**.
 
-First, run the development server:
+---
 
+## ✨ Funcionalidades Principais (Etapas 1 a 3)
+
+- **🎨 Design System Apple iOS ("Liquid Glass")**:
+  - Glassmorphism com `backdrop-filter: blur(20px)` e superfícies translúcidas.
+  - Tipografia SF Pro Display / Text com hierarquia nativa da Apple.
+  - Sidebar translúcida para Desktop e Floating Tab Bar para Mobile.
+  - Suporte completo a Modo Claro e Escuro automático.
+
+- **📊 Dashboard Central**:
+  - Cards de métricas operacionais (Total de Leads, Leads sem Site, Contatados, Reuniões/Fechamentos).
+  - Gráficos interativos com **Recharts** (Volume de Leads por dia e Distribuição por Nicho).
+  - Visão consolidada do fluxo do funil de vendas.
+
+- **🔍 Busca Inteligente no Google Maps**:
+  - Modos de busca por Cidade/Bairro ou por Raio em quilômetros.
+  - Chips com atalhos de nichos de alta conversão (Dentista, Pet Shop, Pizzaria, Academia, etc.).
+  - Integração direta com a **Places API (New)** da Google.
+
+- **🎯 Filtros Avançados de Qualificação**:
+  - **Filtro "Sem Site" (Destaque)**: identifica estabelecimentos sem website cadastrado (o melhor perfil para venda de criação de site).
+  - **Filtro WhatsApp (9...)**: normalização via `libphonenumber-js`, filtrando apenas celulares reais para abordagem direta.
+  - Ordenação por **Score de Oportunidade (0 a 100)**, notas e volume de avaliações.
+
+- **🤖 Inteligência Comercial com Claude**:
+  - Geração de resumo do negócio e oportunidade comercial em 2-3 frases.
+  - Sugestão automática de **"Ângulo de abordagem"** personalizado para início de conversa no WhatsApp.
+  - Botão de abertura rápida de conversa com mensagem pronta no WhatsApp (`wa.me`).
+
+---
+
+## 🛠️ Stack Tecnológica
+
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui tokens, Lucide Icons, Recharts.
+- **State Management**: TanStack Query v5 + Zustand v5.
+- **Mapas & Dados**: Google Places API (New) e Geocoding API.
+- **Inteligência Artificial**: Anthropic SDK (Claude).
+- **Validação & Utilitários**: Zod, `libphonenumber-js`.
+
+---
+
+## 🚀 Instalação e Execução
+
+### 1. Clonar o repositório
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/KKousado/LeadMap.git
+cd LeadMap
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configurar Variáveis de Ambiente
+Copie o arquivo de exemplo e preencha suas chaves:
+```bash
+cp .env.example .env.local
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Variáveis necessárias:
+```env
+GOOGLE_MAPS_API_KEY=AIzaSy...
+NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy...
+ANTHROPIC_API_KEY=sk-ant-...
+NEXT_PUBLIC_SUPABASE_URL=https://...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Instalar dependências e rodar
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Acesse [http://localhost:3000](http://localhost:3000) no seu navegador.
